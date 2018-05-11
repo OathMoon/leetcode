@@ -1,8 +1,8 @@
 /*
  * @Author: OathMoon 
- * @Date: 2018-05-04 23:18:20 
+ * @Date: 2018-05-11 22:48:55 
  * @Last Modified by: OathMoon
- * @Last Modified time: 2018-05-11 22:54:06
+ * @Last Modified time: 2018-05-11 22:55:19
  */
 
 #include <iostream>
@@ -56,31 +56,46 @@ void VisitTree(TreeNode* root)
     cout << endl;
 }
 
-TreeNode* mergeTrees(TreeNode* t1, TreeNode* t2)
+vector<double> averageOfLevels(TreeNode* root)
 {
-    if (t1 && t2)
+    vector<double> result;
+    queue<TreeNode*> nodequeue;
+    nodequeue.push(root);
+    
+    while (!nodequeue.empty())
     {
-        TreeNode *root = new TreeNode(t1->val + t2->val);
-        root->left = mergeTrees(t1->left, t2->left);
-        root->right = mergeTrees(t1->right, t2->right);
-        return root;
-    } 
-    else
-    {
-        return t1 ? t1 : t2;
+        double sum = 0;
+        int n = nodequeue.size();
+        for (int i = 0; i < n; i++)
+        {
+            TreeNode* t = nodequeue.front();
+            nodequeue.pop();
+            
+            sum += t->val;
+            
+            if (t->left)
+                nodequeue.push(t->left);
+            if(t->right)
+                nodequeue.push(t->right);
+        }
+        
+        result.push_back(sum/n);
     }
+    
+    return result;
 }
 
 int main()
 {
-    vector<int> treeValue1 {1, 3, 2, 5};
-    vector<int> treeValue2 {2, 1, 3, 0, 4, 7};
+    vector<int> treeValue {3,9,20,0,0,15,7};
+    TreeNode* root = CreateTree(treeValue);
 
-    TreeNode* root1 = CreateTree(treeValue1, 0);
-    TreeNode* root2 = CreateTree(treeValue2, 0);
-    VisitTree(root1);
-    VisitTree(root2);
+    auto result = averageOfLevels(root);
+    for (auto num : result)
+    {
+        cout << num << "    ";
+    }
+    cout << endl;
 
-    TreeNode* root = mergeTrees(root1, root2);
-    VisitTree(root);
+    return 0;
 }

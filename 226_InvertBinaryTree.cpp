@@ -1,8 +1,8 @@
 /*
  * @Author: OathMoon 
- * @Date: 2018-05-04 23:18:20 
+ * @Date: 2018-05-11 23:17:57 
  * @Last Modified by: OathMoon
- * @Last Modified time: 2018-05-11 22:54:06
+ * @Last Modified time: 2018-05-11 23:23:08
  */
 
 #include <iostream>
@@ -56,31 +56,30 @@ void VisitTree(TreeNode* root)
     cout << endl;
 }
 
-TreeNode* mergeTrees(TreeNode* t1, TreeNode* t2)
+TreeNode* invertTree(TreeNode* root)
 {
-    if (t1 && t2)
+    if (root == nullptr)
     {
-        TreeNode *root = new TreeNode(t1->val + t2->val);
-        root->left = mergeTrees(t1->left, t2->left);
-        root->right = mergeTrees(t1->right, t2->right);
         return root;
-    } 
-    else
-    {
-        return t1 ? t1 : t2;
     }
+    
+    invertTree(root->right);
+    invertTree(root->left);
+    
+    swap(root->left, root->right);
+    
+    return root;
 }
 
 int main()
 {
-    vector<int> treeValue1 {1, 3, 2, 5};
-    vector<int> treeValue2 {2, 1, 3, 0, 4, 7};
+    vector<int> treeValue {4,2,7,1,3,6,9};
 
-    TreeNode* root1 = CreateTree(treeValue1, 0);
-    TreeNode* root2 = CreateTree(treeValue2, 0);
-    VisitTree(root1);
-    VisitTree(root2);
-
-    TreeNode* root = mergeTrees(root1, root2);
+    TreeNode* root = CreateTree(treeValue);
     VisitTree(root);
+    
+    root = invertTree(root);
+    VisitTree(root);
+
+    return 0;
 }
